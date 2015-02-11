@@ -17,7 +17,7 @@ $ mvn clean install -U
 
 ```java
 List<YOUR_MODEL> objects = ExOM.mapFromExcel(EXCEL_FILE)
-                .toObjectOf(YOUR_MODEL)
+                .to(YOUR_MODEL)
                 .map();
 ```
 <h3>example</h3>
@@ -42,7 +42,7 @@ Test
 ```java
 File excelFile = new File(getClass().getResource("/excel.xlsx").getPath());
 List<Model> items = ExOM.mapFromExcel(excelFile)
-        .toObjectOf(Model.class)
+        .to(Model.class)
         .map();
         
 for (Model item : items) {
