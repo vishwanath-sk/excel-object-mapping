@@ -17,7 +17,7 @@ $ mvn clean install -U
 
 ```java
 List<YOUR_MODEL> objects = ExOM.mapFromExcel(EXCEL_FILE)
-                .to(YOUR_MODEL)
+                .to(YOUR_MODEL.class)
                 .map();
 ```
 <h3>example</h3>
