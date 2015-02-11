@@ -90,6 +90,18 @@ public class ExOM {
         return instance;
     }
 
+    private boolean isVersion2003(File file) {
+        return file.getName().endsWith(".xls");
+    }
+
+    private Workbook createWorkbook(InputStream inputStream) throws IOException {
+        if (isVersion2003(excelFile)) {
+            return new HSSFWorkbook(inputStream);
+        } else { //2007+
+            return new XSSFWorkbook(inputStream);
+        }
+    }
+
     public <T> List<T> map() throws Throwable {
         InputStream inputStream = null;
         List<T> items = new ArrayList<>();
@@ -97,17 +109,9 @@ public class ExOM {
         try {
             Iterator<Row> rowIterator;
             inputStream = new FileInputStream(excelFile);
-            int numberOfSheets;
-            Workbook workbook;
-
-            if (excelFile.getName().endsWith(".xls")) {
-                workbook = new HSSFWorkbook(inputStream);
-                numberOfSheets = workbook.getNumberOfSheets();
-            } else { //2007+
-                workbook = new XSSFWorkbook(inputStream);
-                numberOfSheets = workbook.getNumberOfSheets();
-            }
-
+            Workbook workbook = createWorkbook(inputStream);
+            int numberOfSheets = workbook.getNumberOfSheets();
+            
             for (int index = 0; index < numberOfSheets; index++) {
                 Sheet sheet = workbook.getSheetAt(index);
                 rowIterator = sheet.iterator();
