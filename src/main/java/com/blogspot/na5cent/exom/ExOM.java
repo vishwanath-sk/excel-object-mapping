@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -105,7 +105,7 @@ public class ExOM {
 
     public <T> List<T> map() throws Throwable {
         InputStream inputStream = null;
-        List<T> items = new ArrayList<>();
+        List<T> items = new LinkedList<>();
 
         try {
             Iterator<Row> rowIterator;
