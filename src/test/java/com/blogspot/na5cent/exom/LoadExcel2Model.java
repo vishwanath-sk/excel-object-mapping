@@ -20,7 +20,7 @@ public class LoadExcel2Model {
     public void test() throws Throwable {
         File excelFile = new File(getClass().getResource("/excel.xlsx").getPath());
         List<Model> items = ExOM.mapFromExcel(excelFile)
-                .toObjectOf(Model.class)
+                .to(Model.class)
                 .map();
 
         for (Model item : items) {

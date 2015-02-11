@@ -7,6 +7,7 @@ import com.blogspot.na5cent.exom.util.EachFieldCallback;
 import com.blogspot.na5cent.exom.util.ReflectionUtils;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -42,7 +43,7 @@ public class ExOM {
         return new ExOM(excelFile);
     }
 
-    public ExOM toObjectOf(Class clazz) {
+    public ExOM to(Class clazz) {
         this.clazz = clazz;
         return this;
     }

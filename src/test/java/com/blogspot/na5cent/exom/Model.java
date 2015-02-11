@@ -50,5 +50,4 @@ public class Model {
     public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
     }
-
 }
