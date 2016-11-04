@@ -20,6 +20,21 @@ List<YOUR_MODEL> objects = ExOM.mapFromExcel(EXCEL_FILE)
                 .to(YOUR_MODEL.class)
                 .map();
 ```
+<h3>Read from CSV file</h3>
+
+```java
+List<YOUR_MODEL> objects = CSVFileOM.mapFromCsvFile(CSV_FILE)
+                .to(YOUR_MODEL.class)
+                .map();
+```	
+<h3>Write to CSV file</h3>
+
+```java			
+CSVFileOM.mapFromCsvFile(CSV_FILE)
+.to(YOUR_MODEL.class)
+.write(List<YOUR_MODEL>);
+```	
+
 <h3>example</h3>
 
 Model.java
