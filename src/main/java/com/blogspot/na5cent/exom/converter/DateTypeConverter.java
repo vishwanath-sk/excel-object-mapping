@@ -4,9 +4,12 @@
 package com.blogspot.na5cent.exom.converter;
 
 import java.sql.Timestamp;
+
 import java.text.SimpleDateFormat;
+
 import java.util.Calendar;
 import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +42,16 @@ public class DateTypeConverter implements TypeConverter<Date> {
         }
 
         return calendar.getTime();
+    }
+    
+    
+    @Override
+    public String stringVal(Object value , String... pattern) {
+        if(value != null && value instanceof Date){
+            return new SimpleDateFormat(pattern[0]).format((Date) value);
+    //            return value.toString();
+        }
+        return "";
     }
 
 }

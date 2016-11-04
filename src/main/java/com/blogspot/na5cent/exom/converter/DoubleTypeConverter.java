@@ -4,6 +4,7 @@
 package com.blogspot.na5cent.exom.converter;
 
 import java.math.BigDecimal;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,14 @@ public class DoubleTypeConverter implements TypeConverter<Double> {
         }
 
         return null;
+    }
+    
+    @Override
+    public String stringVal(Object value , String... pattern) {
+        if(value != null){
+            return value.toString();
+        }
+        return "";
     }
 
 }

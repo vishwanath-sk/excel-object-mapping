@@ -3,6 +3,7 @@
  */
 package com.blogspot.na5cent.exom.converter;
 
+
 /**
  * @author redcrow
  */
@@ -15,6 +16,16 @@ public class StringTypeConverter implements TypeConverter<String> {
         }
         
         return null;
+    }
+    
+    
+    @Override
+    public String stringVal(Object value , String... pattern) {
+        if (value instanceof String) {
+            return ((String) value).trim();
+        }
+        
+        return "";
     }
 
 }

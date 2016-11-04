@@ -46,5 +46,14 @@ public class BooleanTypeConverter implements TypeConverter<Boolean> {
 
         return Boolean.FALSE;
     }
+    
+    
+    @Override
+    public String stringVal(Object value , String... pattern) {
+        if(value != null){
+            return value.toString();
+        }
+        return "";
+    }
 
 }
