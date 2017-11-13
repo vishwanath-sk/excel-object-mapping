@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -36,11 +37,23 @@ public class ExOM {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExOM.class);
 
-    private final File excelFile;
+    private File excelFile;
     private Class clazz;
+    
+    private InputStream fileInStream;
+    
+    private OutputStream fileOutStream;
 
     private ExOM(File excelFile) {
         this.excelFile = excelFile;
+    }
+    
+    private ExOM(InputStream fileInStream) {
+        this.fileInStream = fileInStream;
+    }
+    
+    private ExOM(OutputStream fileOutStream) {
+        this.fileOutStream = fileOutStream;
     }
 
     public static ExOM mapFromExcel(File excelFile) {
@@ -96,6 +109,9 @@ public class ExOM {
     }
 
     private boolean isVersion2003(File file) {
+    	if(file == null) {
+    		return false;
+    	}
         return file.getName().endsWith(".xls");
     }
 
@@ -121,7 +137,11 @@ public class ExOM {
 
         try {
             Iterator<Row> rowIterator;
-            inputStream = new FileInputStream(excelFile);
+            if(excelFile == null) {
+            	inputStream = fileInStream;
+            }else {
+            	inputStream = new FileInputStream(excelFile);
+            }
             Workbook workbook = createWorkbook(inputStream);
             int numberOfSheets = workbook.getNumberOfSheets();
             
@@ -194,8 +214,13 @@ public class ExOM {
                   rowNum++;
                 }
            
-            try (FileOutputStream outputStream = new FileOutputStream(excelFile)) {
-                workbook.write(outputStream);
+            if(excelFile == null) {
+	                workbook.write(fileOutStream);
+            }
+            else {
+	            try (FileOutputStream outputStream = new FileOutputStream(excelFile)) {
+	                workbook.write(outputStream);
+	            }
             }
         } finally {
         }

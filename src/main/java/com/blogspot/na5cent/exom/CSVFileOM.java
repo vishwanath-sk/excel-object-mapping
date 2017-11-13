@@ -1,9 +1,5 @@
 package com.blogspot.na5cent.exom;
 
-import com.blogspot.na5cent.exom.util.EachFieldCallback;
-import com.blogspot.na5cent.exom.util.ReflectionUtils;
-import com.blogspot.na5cent.exom.util.StringReturnCallBack;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,24 +7,41 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.blogspot.na5cent.exom.util.EachFieldCallback;
+import com.blogspot.na5cent.exom.util.ReflectionUtils;
+import com.blogspot.na5cent.exom.util.StringReturnCallBack;
+
 
 public class CSVFileOM {
         
-    private final File csvFile;
+    private File csvFile;
     private Class clazz;
     private String seperator = ",";
     
     
+    private InputStream fileInStream;
+    
+    private OutputStream fileOutStream;
+    
     private CSVFileOM(File csvFile) {
         this.csvFile = csvFile;
+    }
+    
+    private CSVFileOM(InputStream fileInStream) {
+        this.fileInStream = fileInStream;
+    }
+    
+    private CSVFileOM(OutputStream fileOutStream) {
+        this.fileOutStream = fileOutStream;
     }
     
     public static CSVFileOM mapFromCsvFile(File csvFile) {
@@ -56,7 +69,11 @@ public class CSVFileOM {
         BufferedReader br = null;
 
         try {
-            br = new BufferedReader(new FileReader(csvFile));
+        	if(csvFile == null) {
+        		br = new BufferedReader(new InputStreamReader(fileInStream));
+        	}else {
+        		br = new BufferedReader(new FileReader(csvFile));
+        	}
             String line = "";
 
             int i = 0;
@@ -154,8 +171,11 @@ public class CSVFileOM {
         BufferedWriter bw = null;
 
         try {
-           
-            bw = new BufferedWriter(new FileWriter(csvFile, false));
+           if(csvFile == null) {
+        	   bw = new BufferedWriter(new OutputStreamWriter(fileOutStream));
+           }else {
+        	   bw = new BufferedWriter(new FileWriter(csvFile, false));
+           }
             writeHeader(bw);
             bw.newLine();
             for (T data : dataList) {
