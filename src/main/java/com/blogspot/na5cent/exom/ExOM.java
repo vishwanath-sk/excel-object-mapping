@@ -3,10 +3,9 @@
  */
 package com.blogspot.na5cent.exom;
 
-import com.blogspot.na5cent.exom.util.EachFieldCallback;
-import com.blogspot.na5cent.exom.util.ReflectionUtils;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -16,6 +15,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -24,6 +24,10 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.blogspot.na5cent.exom.util.EachFieldCallback;
+import com.blogspot.na5cent.exom.util.ReflectionUtils;
+import com.blogspot.na5cent.exom.util.StringReturnCallBack;
 
 /**
  * @author redcrow
@@ -102,6 +106,14 @@ public class ExOM {
             return new XSSFWorkbook(inputStream);
         }
     }
+    
+    private Workbook createWorkbook() throws IOException {
+        if (isVersion2003(excelFile)) {
+            return new HSSFWorkbook();
+        } else { //2007+
+            return new XSSFWorkbook();
+        }
+    }
 
     public <T> List<T> map() throws Throwable {
         InputStream inputStream = null;
@@ -167,5 +179,56 @@ public class ExOM {
         }
 
         return value;
+    }
+    
+    
+    public <T> void write(List<T> dataList) throws Throwable {
+        
+        Workbook workbook = createWorkbook();
+        Sheet sheet = workbook.createSheet("Sheet1");
+        try {
+            writeHeader(sheet);
+            int rowNum = 1;
+            for (T data : dataList) {
+                   writeDataLine(data, sheet,rowNum);
+                  rowNum++;
+                }
+           
+            try (FileOutputStream outputStream = new FileOutputStream(excelFile)) {
+                workbook.write(outputStream);
+            }
+        } finally {
+        }
+
+    }
+
+    private void writeHeader(Sheet sheet) throws IOException {
+        
+        List<String> headerList = ReflectionUtils.getFields(clazz);
+        Row row = sheet.createRow(0);
+        int columnCount = 0;
+            for(String column : headerList){
+            	Cell cell = row.createCell(columnCount++);
+            	cell.setCellValue(column);
+            }
+    }
+
+    private  void  writeDataLine(final Object data, Sheet sheet, int rowNum) throws Throwable {
+        Row row = sheet.createRow(rowNum);
+        List<String> dataList = ReflectionUtils.listFieldValue(clazz, new StringReturnCallBack() {
+                @Override
+                public String each(Field field, String columnName) throws Throwable {
+                    return ReflectionUtils.getValueOfField(data, field);
+                }
+            
+            
+            });
+        int columnCount = 0;
+            for(String column : dataList){
+            	Cell cell = row.createCell(columnCount++);
+            	cell.setCellValue(column);
+            }
+        
+        
     }
 }

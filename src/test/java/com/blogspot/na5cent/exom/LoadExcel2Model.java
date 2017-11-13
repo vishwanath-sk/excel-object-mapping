@@ -5,9 +5,11 @@ package com.blogspot.na5cent.exom;
 
 import java.io.File;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.Test;
+
+import bsh.This;
 
 /**
  * @author redcrow
@@ -16,13 +18,15 @@ public class LoadExcel2Model {
 
     private static final Logger LOG = LoggerFactory.getLogger(LoadExcel2Model.class);
 
-    @Test
-    public void test() throws Throwable {
-        File excelFile = new File(getClass().getResource("/excel.xlsx").getPath());
+    public static void main(String args[]) throws Throwable {
+        File excelFile = new File(LoadExcel2Model.class.getResource("/excel.xlsx").getPath());
         List<Model> items = ExOM.mapFromExcel(excelFile)
                 .to(Model.class)
                 .map();
 
+        File excelFile1 = new File("/home/vishwanath/Desktop/excel.xlsx");
+
+        ExOM.mapFromExcel(excelFile1).to(Model.class).write(items);
         for (Model item : items) {
             LOG.debug("first name --> {}", item.getFistName());
             LOG.debug("last name --> {}", item.getLastName());

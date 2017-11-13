@@ -4,7 +4,7 @@
 
     <groupId>com.blogspot.na5cent</groupId>
     <artifactId>excel-object-mapping</artifactId>
-    <version>1.0-SNAPSHORT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>excel-object-mapping</name>
